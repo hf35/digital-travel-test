@@ -4,6 +4,7 @@ import { NewsItem } from "@/services/types/api";
 import { router } from 'expo-router';
 import { ThemedText } from "./themed-text";
 
+import { useAuth } from "@/context/AuthContext";
 import { useSavedNews } from "@/context/SavedNewsContext";
 import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from 'react-native';
@@ -11,6 +12,7 @@ import { IconButton } from "react-native-paper";
 
 
 export default function NewsCard({ newsItem }: { newsItem: NewsItem }) {
+    const { requireAuth, isAuth } = useAuth();
     const { save, remove, saved } = useSavedNews();
     const openNews = (item: NewsItem) => {
         console.log('Open news item');
@@ -29,14 +31,14 @@ export default function NewsCard({ newsItem }: { newsItem: NewsItem }) {
                 <ThemedText key={newsItem.id} type="subtitle" style={styles.newsSource}>
                     {newsItem.news_site}
                 </ThemedText>
-                            <View style={styles.cardButtons}>
-                <IconButton
-                    icon="content-save"
-                    iconColor={isSaved ? "black" : "gray"}
-                    size={20}
-                    onPress={() => isSaved ? remove(newsItem.id) : save(newsItem)}
-                />
-            </View>
+                <View style={styles.cardButtons}>
+                    <IconButton
+                        icon="content-save"
+                        iconColor={isSaved && isAuth ? "black" : "gray"}
+                        size={20}
+                        onPress={() => isSaved && isAuth ? remove(newsItem.id) : requireAuth(() => save(newsItem))}
+                    />
+                </View>
             </View>
             <ThemedText type="subtitle" numberOfLines={2}>{newsItem.title}</ThemedText>
             <ThemedText type="default" numberOfLines={5}>{newsItem.summary}</ThemedText>
@@ -49,8 +51,8 @@ export default function NewsCard({ newsItem }: { newsItem: NewsItem }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 16 },
-    newsSource: { position: 'absolute', bottom: 0, right: 0 , textAlign: 'center', backgroundColor: '#ffffffce', paddingVertical: 8, paddingHorizontal: 16, borderTopLeftRadius: 16 },
+    newsSource: { position: 'absolute', bottom: 0, right: 0, textAlign: 'center', backgroundColor: '#ffffffce', paddingVertical: 8, paddingHorizontal: 16, borderTopLeftRadius: 16 },
     cardButtons: {
-        position: 'absolute', top: 0, right: 0 , textAlign: 'center', backgroundColor: '#ffffffce',  borderBottomLeftRadius: 16
+        position: 'absolute', top: 0, right: 0, textAlign: 'center', backgroundColor: '#ffffffce', borderBottomLeftRadius: 16
     },
 });

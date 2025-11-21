@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import Protected from '@/components/protected';
 import { ThemedText } from '@/components/themed-text';
@@ -15,7 +15,7 @@ export default function HomeScreen() {
         <View style={styles.canvas}>
           <ThemedText type='title' >{"Account"}</ThemedText>
         </View>
-        <Button onPress={() => doLogout().then(() => router.replace("/"))} mode="contained"> Logout</Button>
+        {Platform.OS !== "web" && <Button onPress={() => doLogout().then(() => router.replace("/"))} mode="contained"> Logout</Button>}
       </ScrollView>
     </Protected>
   );

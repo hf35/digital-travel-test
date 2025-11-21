@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as LocalAuthentication from "expo-local-authentication";
 import { router } from "expo-router";
 import React, { createContext, useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 
 export type AuthContextType = {
     authChecked: boolean;
@@ -26,8 +26,9 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: any) => {
     const [authChecked, setAuthChecked] = useState(false);
-    const [isAuth, setIsAuth] = useState(false);
+    const [isAuth, setIsAuth] = useState(Platform.select({ web: true, default: false }));
     const [loginModalVisible, setLoginModalVisible] = useState(false);
+    const [fnAfterAuth, setFnAfterAuth] = useState<() => void>(() => () => { });
 
     // выполняем проверку при старте приложения
     useEffect(() => {
@@ -52,6 +53,14 @@ export const AuthProvider = ({ children }: any) => {
             setIsAuth(true);
             await AsyncStorage.setItem("isAuth", "1");
             setLoginModalVisible(false);
+            try {
+
+                fnAfterAuth();
+            }
+            finally {
+                setFnAfterAuth(() => { });
+            }
+
         }
 
         return result.success;
@@ -64,6 +73,7 @@ export const AuthProvider = ({ children }: any) => {
 
     const requireAuth = async (fn: () => any) => {
         if (isAuth) return fn();
+        setFnAfterAuth(() => fn);
         setLoginModalVisible(true);
     };
 
