@@ -1,36 +1,24 @@
 import { ScrollView, StyleSheet } from 'react-native';
 
-
 import Protected from '@/components/protected';
 import { ThemedText } from '@/components/themed-text';
-
+import { useAuth } from '@/context/AuthContext';
+import { router } from "expo-router";
+import { Button } from 'react-native';
 
 export default function HomeScreen() {
-  
+  const { doLogout } = useAuth();
+
   return (
     <Protected>
       <ScrollView>
-        <ThemedText>{"H1111222"}</ThemedText>
+        <ThemedText>{"Account"}</ThemedText>
+        <Button title="Press me" onPress={() => doLogout().then(()=> router.replace("/"))} />
       </ScrollView>
     </Protected>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+
 });
