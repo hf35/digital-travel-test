@@ -1,26 +1,44 @@
-import { ScrollView, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 
+import NewsCard from '@/components/NewsCard';
 import Protected from '@/components/protected';
 import { ThemedText } from '@/components/themed-text';
+import { useSavedNews } from '@/context/SavedNewsContext';
 
 
-export default function HomeScreen() {
-  
+export default function SavedNewsScreen() {
+  const { saved, remove } = useSavedNews();
+  console.log("Saved news:", saved);
+
   return (
     <Protected>
-      <ScrollView>
-        <ThemedText>{"H1111222"}</ThemedText>
-      </ScrollView>
+      <View style={styles.container}>
+        <ThemedText type='title' style={styles.pageTitle}>{"My Space"}</ThemedText>
+        {!saved && (
+          <ThemedText>{"Loading saved news..."}</ThemedText>
+        )}
+        {saved.length === 0 && (
+          <ThemedText>{"No saved news articles."}</ThemedText>
+        )}
+
+        {saved && <FlatList data={saved} keyExtractor={(item) => item.id.toString()} renderItem={({ item }) => (
+          <NewsCard newsItem={item} />
+        )}>
+        </FlatList>}
+
+      </View>
     </Protected>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  pageTitle: {
+    marginBottom: 16,
+  },
+  container: {
+    flex: 1,
+    padding: 16,
   },
   stepContainer: {
     gap: 8,

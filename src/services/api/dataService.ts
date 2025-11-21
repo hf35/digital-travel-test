@@ -17,7 +17,7 @@ export async function getSpaceNews(): Promise<ApiResponse<NewsData>> {
   }
 
   // 2. Если нет в кеше → запрос
-  const result = await fetchApi<NewsData>(SPACE_NEWS_BASE_URL);
+  const result = await fetchApi<NewsData>(`${SPACE_NEWS_BASE_URL}?limit=50`);
   
   // 3. Если успешно — кэшируем
   if (result.ok && result.data !== null) {

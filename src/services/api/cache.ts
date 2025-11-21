@@ -5,7 +5,7 @@ type CacheItem<T> = {
   data: T;
 };
 
-const DEFAULT_TTL = 5 * 60 * 1000; // 5 минут
+const DEFAULT_TTL = 10 * 60 * 1000; // 5 минут
 
 export async function getCachedData<T>(key: string): Promise<T | null> {
   try {

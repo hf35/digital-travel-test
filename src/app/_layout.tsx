@@ -1,28 +1,29 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { AuthProvider } from '@/context/AuthContext';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { SavedNewsProvider } from '@/context/SavedNewsContext';
 import { Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
 
   return (
     <AuthProvider >
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <SafeAreaView style={{ flex: 1 }} edges={Platform.select({ default: ['top'] })} >
+      <SavedNewsProvider>
+      <ThemeProvider value={DefaultTheme}>
+        <SafeAreaView style={{ flex: 1, backgroundColor:"white" }} edges={Platform.select({ default: ['top'] })} >
 
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             {/* <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} /> */}
           </Stack>
-          <StatusBar style="auto" />
+          <StatusBar style="dark"  />
         </SafeAreaView>
       </ThemeProvider>
+      </SavedNewsProvider>
     </AuthProvider>
   );
 }

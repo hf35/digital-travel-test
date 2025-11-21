@@ -1,5 +1,5 @@
 
-export type NewsRecord = {
+export type NewsItem = {
     id: number;
     title: string;
     url: string;
@@ -24,14 +24,14 @@ export type NewsData = {
     count: number;
     next: string;
     previous: string;
-    results: NewsRecord[];
+    results: NewsItem[];
 }
 
 
 export type ApiResponse = {
     ok: boolean;
     status: number;
-    news?: NewsRecord[] | null;
+    news?: NewsItem[] | null;
     error?: string | null;
     totalResults?: number;
 };
