@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 
 
 import NewsCard from '@/components/NewsCard';
@@ -16,7 +16,9 @@ export default function SavedNewsScreen() {
       <View style={styles.container}>
         <ThemedText type='title' style={styles.pageTitle}>{"My Space"}</ThemedText>
         {!saved && (
-          <ThemedText>{"Loading saved news..."}</ThemedText>
+          <View style={{ flex: 1, justifyContent: "center" }}>
+            <ActivityIndicator size="large" />
+          </View>
         )}
         {saved.length === 0 && (
           <ThemedText>{"No saved news articles."}</ThemedText>

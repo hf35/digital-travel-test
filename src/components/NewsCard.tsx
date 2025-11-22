@@ -6,19 +6,22 @@ import { ThemedText } from "./themed-text";
 
 import { useAuth } from "@/context/AuthContext";
 import { useSavedNews } from "@/context/SavedNewsContext";
+import { useNewsStore } from "@/storage/currentNews";
 import { useMemo } from "react";
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { IconButton } from "react-native-paper";
+import { ExternalLink } from "./external-link";
 
 
-export default function NewsCard({ newsItem }: { newsItem: NewsItem }) {
+export default function NewsCard({ newsItem, showFullData = false }: { newsItem: NewsItem, showFullData?: boolean }) {
     const { requireAuth, isAuth } = useAuth();
     const { save, remove, saved } = useSavedNews();
+    const { setSelected } = useNewsStore();
     const openNews = (item: NewsItem) => {
         console.log('Open news item');
+        setSelected(item);
         router.push({
             pathname: "/news/[id]",
-            params: { item: JSON.stringify(item) },
         });
     }
     const isSaved = useMemo(() => saved.some((n) => n.id === newsItem?.id), [saved, newsItem]);
@@ -41,7 +44,18 @@ export default function NewsCard({ newsItem }: { newsItem: NewsItem }) {
                 </View>
             </View>
             <ThemedText type="subtitle" numberOfLines={2}>{newsItem.title}</ThemedText>
-            <ThemedText type="default" numberOfLines={5}>{newsItem.summary}</ThemedText>
+            <ThemedText type="default" >{new Date(newsItem.published_at).toLocaleString("ru-ru")}</ThemedText>
+            {showFullData && <View>
+                {newsItem.authors.map((author) => (<View  >
+                    <ThemedText type="default" key={author.name}>Author: {author.name}</ThemedText>
+                    {author.socials && <View style={{ flexDirection: "row", gap: 8 }}>
+                        {Object.entries(author.socials).filter(social => social[1]).map((social) =>
+                            <ExternalLink href={social[1]!} text={social[0]} />
+                        )}</View>}
+                </View>))}
+
+            </View>}
+            <ThemedText type="default" numberOfLines={showFullData ? undefined : 5}>{newsItem.summary}</ThemedText>
 
         </View>
 

@@ -3,7 +3,7 @@ import { ThemedText } from '@/components/themed-text';
 import { getSpaceNews } from '@/services/api/dataService';
 import { NewsItem } from '@/services/types/api';
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 
 
 export default function TabTwoScreen() {
@@ -29,7 +29,9 @@ export default function TabTwoScreen() {
       {totalNews !== null ? (
         <ThemedText style={styles.pageSubtitle}>Total news articles about space: {totalNews}</ThemedText>
       ) : (
-        <ThemedText>Loading news data...</ThemedText>
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" />
+        </View>
       )}
       <FlatList data={newsData} keyExtractor={(item) => item.id.toString()} renderItem={({ item }) => (
         <NewsCard newsItem={item} />

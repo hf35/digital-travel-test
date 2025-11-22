@@ -13,7 +13,7 @@ export type NewsItem = {
         id: string;
         provider: string;
     }>;
-    authors: Array<{ name: string }>;
+    authors: Array<{ name: string, socials?: Record<string, string | null> }>;
     events: Array<{
         id: string;
         provider: string;
