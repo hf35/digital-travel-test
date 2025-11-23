@@ -36,9 +36,7 @@ export default function TabTwoScreen() {
       {newsData.length > 0 && <NewsFilter newsData={newsData} onFilterNews={onFilterNews} />}
       <FlatList data={filteredNews} keyExtractor={(item) => item.id.toString()} renderItem={({ item }) => (
         <NewsCard newsItem={item} />
-      )}>
-      </FlatList>
-
+      )} />
     </View>
   );
 }

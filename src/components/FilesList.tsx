@@ -1,7 +1,7 @@
 import { DownloadFile, downloadFile, fetchFilesList } from "@/services/remote-files";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { ActivityIndicator, Button, Card, ProgressBar } from "react-native-paper";
+import { ActivityIndicator, Button, Card, IconButton, ProgressBar } from "react-native-paper";
 import { useToast } from "react-native-paper-toast";
 import { ThemedText } from "./themed-text";
 
@@ -45,8 +45,19 @@ export default function FilesList({ updateTrigger }: { updateTrigger?: number })
   if (loading) return <View style={{ marginVertical: 16 }}><ActivityIndicator size={"small"} /></View>;
 
   return (
-    <View >
-      <ThemedText type="subtitle" style={{ marginBottom: 8 }}>{"Available Files"}</ThemedText>
+    <View>
+      <View style={styles.titleBox}>
+        <ThemedText type="subtitle">
+          {"Available Files"}
+        </ThemedText>
+        <IconButton
+          icon="reload"
+          disabled={loading}
+          iconColor={loading ? "gray" : "black"}
+          size={20}
+          onPress={() => loadFiles()}
+        />
+      </View>
       {files.length === 0 && <Text>No files available.</Text>}
       {loading && <ActivityIndicator size={"small"} />}
       {files.map((file: DownloadFile) => {
@@ -84,6 +95,6 @@ export default function FilesList({ updateTrigger }: { updateTrigger?: number })
 }
 
 const styles = StyleSheet.create({
-
+  titleBox:{ flexDirection: 'row', alignItems: 'baseline', marginBottom: 8 },
   card: { marginBottom: 12, backgroundColor: 'white' },
 });

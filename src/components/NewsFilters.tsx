@@ -9,6 +9,7 @@ export default function NewsFilter({ newsData, onFilterNews }:
     const [searchText, setSearchText] = useState("");
     const [selectedSource, setSelectedSource] = useState("");
     const [menuVisible, setMenuVisible] = useState(false);
+    const [k, setK] = useState(0);
 
     const sources = Array.from(new Set(newsData.map((item) => item.news_site)));
 
@@ -19,26 +20,31 @@ export default function NewsFilter({ newsData, onFilterNews }:
             return matchesTitle && matchesSource;
         });
         onFilterNews(filteredNews);
+        setK(k + 1);
     }, [searchText, selectedSource]);
 
-
+    console.log("menuVisible", menuVisible);
 
     return (
+     
         <View style={styles.container}>
             <Menu
+                key={k}
                 visible={menuVisible}
                 onDismiss={() => setMenuVisible(false)}
-                anchor={
-                    <Button mode="outlined" onPress={() => setMenuVisible(true)}>
-                        {`Источник: ${selectedSource}` || "Все источники"}
+                anchor={<View collapsable={false} >
+                    <Button mode="outlined"  onPress={() => setMenuVisible(true)} icon={"chevron-down"} 
+       
+                    contentStyle={{flexDirection: 'row-reverse', backgroundColor: 'white' }}>
+                        {selectedSource ? `Источник: ${selectedSource}` : "Все источники"}
                     </Button>
-                }
+                </View>}
             >
                 <Menu.Item onPress={() => {
-                    setSelectedSource("")
                     setMenuVisible(false)
-                    }}
-                     title="Все источники" />
+                    setSelectedSource("")
+                }}
+                    title="Все источники" />
                 {sources.map((source) => (
                     <Menu.Item
                         key={source}
@@ -71,8 +77,8 @@ export default function NewsFilter({ newsData, onFilterNews }:
 }
 
 const styles = StyleSheet.create({
-    container: { marginBottom: 16 },
+    container: { marginBottom: 8 },
     searchBox: { display: 'flex', flexDirection: 'row', gap: 8, marginVertical: 16 },
-    inputText: { flex: 1, height: 56 },
-    button: { height: 56 }
+    inputText: { flex: 1, height: 56, backgroundColor: 'white' },
+    button: { height: 56, backgroundColor: 'white' }
 })

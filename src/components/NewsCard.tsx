@@ -49,7 +49,7 @@ export default function NewsCard({ newsItem, showFullData = false }: { newsItem:
                     <ThemedText type="default" key={author.name}>Author: {author.name}</ThemedText>
                     {author.socials && <View style={styles.authorsContainer}>
                         {Object.entries(author.socials).filter(social => social[1]).map((social) =>
-                            <ExternalLink href={social[1]!} text={social[0]} />
+                            <ExternalLink href={social[1]!} text={social[0]} key={social[0]}/>
                         )}</View>}
                 </View>))}
 
@@ -63,8 +63,8 @@ export default function NewsCard({ newsItem, showFullData = false }: { newsItem:
 
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16 },
-    card: { marginBottom: 8, flexDirection: 'column', gap: 4 },
+    container: { flex: 1, padding: 16},
+    card: { flexDirection: 'column', gap: 4,  borderBottomColor: '#ccc', borderBottomWidth: 1, marginBottom: 24, paddingBottom: 8 },
     cardImage: { width: '100%', height: 200 },
     newsSource: { position: 'absolute', bottom: 0, right: 0, textAlign: 'center', backgroundColor: '#ffffffce', paddingVertical: 8, paddingHorizontal: 16, borderTopLeftRadius: 16 },
     cardButtons: {
