@@ -10,10 +10,8 @@ export default function Protected({ children }: any) {
 
   useEffect(() => {
     if (isFocused) {
-      console.log("Protected component mounted, isAuth:", isAuth);
       if (!isAuth) {
-        console.log("User not authenticated, opening login modal");
-        openLoginModal();  // сразу показать модалку биометрии
+        openLoginModal(); 
       }
     }
   }, [isFocused]);

@@ -1,10 +1,9 @@
 import NewsCard from "@/components/NewsCard";
 import { ThemedText } from "@/components/themed-text";
 import { useSavedNews } from "@/context/SavedNewsContext";
-import { NewsItem } from "@/services/types/api";
 import { useNewsStore } from "@/storage/currentNews";
 import { router, Stack } from "expo-router";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
 
@@ -14,17 +13,16 @@ export default function NewsWebView() {
 
   const isSaved = useMemo(() => saved.some((n) => n.id === newsItem?.id), [saved, newsItem]);
 
-    const openFullNews = (item: NewsItem) => {
-        console.log('Open full news item');
-        router.push({
-            pathname: "/news/[id]/view",
-        });
-    }
+  const openFullNews = useCallback(() => {
+    router.push({
+      pathname: "/news/[id]/view",
+    });
+  }, [])
 
   if (!newsItem) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ThemedText>{"Something went wrong"}</ThemedText>
+      <View style={styles.errorBox}>
+        <ThemedText>{"Что то пошло не так"}</ThemedText>
       </View>
     );
   }
@@ -34,19 +32,18 @@ export default function NewsWebView() {
       <Stack.Screen
         options={{
           title: newsItem.title as string || "Новость",
-
         }}
 
       />
 
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, padding: 16, flexGrow: 1 }}>
-        <NewsCard newsItem={newsItem} showFullData={true} />
+        <View style={styles.newsContainer}>
+          <NewsCard newsItem={newsItem} showFullData={true} />
         </View>
         <View style={styles.bottomBar}>
           <IconButton
             icon="content-save"
-            iconColor={isSaved ? "black":"gray"}
+            iconColor={isSaved ? "black" : "gray"}
             size={20}
             onPress={() => isSaved ? remove(newsItem.id) : save(newsItem)}
           />
@@ -54,7 +51,7 @@ export default function NewsWebView() {
             icon="open-in-new"
             iconColor={"black"}
             size={20}
-            onPress={() => openFullNews(newsItem)}
+            onPress={() => openFullNews()}
           />
         </View>
       </View>
@@ -75,5 +72,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-  }
+  },
+  newsContainer:{ flex: 1, padding: 16, flexGrow: 1 },
+  errorBox: { flex: 1, justifyContent: 'center', alignItems: 'center' }
 });

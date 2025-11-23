@@ -36,4 +36,10 @@ export type ApiResponse = {
     totalResults?: number;
 };
 
+export type FileItem = {
+    uri: string;
+    name: string;
+    mimeType?: string;
+};
+
 export const SPACE_NEWS_BASE_URL = "https://api.spaceflightnewsapi.net/v4/articles/";

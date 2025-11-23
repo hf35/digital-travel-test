@@ -3,7 +3,7 @@ import { useSavedNews } from "@/context/SavedNewsContext";
 import { useNewsStore } from "@/storage/currentNews";
 import { Stack } from "expo-router";
 import { useMemo, useState, } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { WebView } from "react-native-webview";
@@ -18,8 +18,8 @@ export default function NewsWebView() {
 
   if (!newsItem) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ThemedText>{"Something went wrong"}</ThemedText>
+      <View style={styles.errorBox}>
+        <ThemedText>{"Что то пошло не так"}</ThemedText>
       </View>
     );
   }
@@ -37,15 +37,18 @@ export default function NewsWebView() {
       />
 
       <Animated.View entering={FadeIn.duration(300)} style={{ flex: 1 }}>
-        <WebView
+        {Platform.OS !== "web" ? <WebView
           source={{ uri: String(newsItem.url) }}
           onLoadEnd={() => setLoaded(true)}
           style={{ flex: 1 }}
-        />
+        /> :
+          <iframe src={String(newsItem.url)} style={{ flex: 1, width: window.innerWidth, height: '100%' }} onLoad={() => setLoaded(true)} />
+        }
+
         <View style={styles.bottomBar}>
           <IconButton
             icon="content-save"
-            iconColor={isSaved ? "black":"gray"}
+            iconColor={isSaved ? "black" : "gray"}
             size={20}
             onPress={() => isSaved ? remove(newsItem.id) : save(newsItem)}
           />
@@ -66,5 +69,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     display: 'flex',
     paddingHorizontal: 10,
-  }
+  },
+  errorBox: { flex: 1, justifyContent: 'center', alignItems: 'center' }
 });

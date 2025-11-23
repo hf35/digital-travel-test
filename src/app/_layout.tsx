@@ -5,25 +5,31 @@ import 'react-native-reanimated';
 
 import { AuthProvider } from '@/context/AuthContext';
 import { SavedNewsProvider } from '@/context/SavedNewsContext';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
+import { MD3LightTheme, Provider as PaperProvider } from 'react-native-paper';
+import { ToastProvider } from 'react-native-paper-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 export default function RootLayout() {
 
   return (
     <AuthProvider >
       <SavedNewsProvider>
-      <ThemeProvider value={DefaultTheme}>
-        <SafeAreaView style={{ flex: 1, backgroundColor:"white" }} edges={Platform.select({ default: ['top'] })} >
+        <ThemeProvider value={DefaultTheme}>
+          <SafeAreaView style={styles.safeArea} edges={Platform.select({ default: ['top'] })} >
+            <PaperProvider theme={MD3LightTheme}><ToastProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack>
+              <StatusBar style="dark" />
+            </ToastProvider></PaperProvider>
 
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            {/* <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} /> */}
-          </Stack>
-          <StatusBar style="dark"  />
-        </SafeAreaView>
-      </ThemeProvider>
+          </SafeAreaView>
+        </ThemeProvider>
       </SavedNewsProvider>
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1, backgroundColor: "white" }
+})

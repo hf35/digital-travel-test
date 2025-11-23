@@ -30,17 +30,14 @@ export const AuthProvider = ({ children }: any) => {
     const [loginModalVisible, setLoginModalVisible] = useState(false);
     const [fnAfterAuth, setFnAfterAuth] = useState<() => void>(() => () => { });
 
-    // выполняем проверку при старте приложения
     useEffect(() => {
         (async () => {
-            // например: проверить кеш, токен, флаг био
             const saved = await AsyncStorage.getItem("isAuth");
-
             if (saved === "1") {
                 setIsAuth(true);
             }
 
-            setAuthChecked(true); // 👈 вот тут применяется
+            setAuthChecked(true); 
         })();
     }, []);
 
@@ -60,9 +57,7 @@ export const AuthProvider = ({ children }: any) => {
             finally {
                 setFnAfterAuth(() => { });
             }
-
         }
-
         return result.success;
     };
 
@@ -93,7 +88,6 @@ export const AuthProvider = ({ children }: any) => {
                 openLoginModal,
             }}
         >
-            {/* пока нет authChecked — можно показать загрузку */}
             {!authChecked ? (
                 <View style={{ flex: 1, justifyContent: "center" }}>
                     <ActivityIndicator size="large" />
@@ -108,8 +102,7 @@ export const AuthProvider = ({ children }: any) => {
                     onClose={() => {
                         setLoginModalVisible(false)
                         router.replace("/");
-                    }
-                    }
+                    }}
                 />
             )}
         </AuthContext.Provider>

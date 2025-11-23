@@ -18,7 +18,6 @@ export default function NewsCard({ newsItem, showFullData = false }: { newsItem:
     const { save, remove, saved } = useSavedNews();
     const { setSelected } = useNewsStore();
     const openNews = (item: NewsItem) => {
-        console.log('Open news item');
         setSelected(item);
         router.push({
             pathname: "/news/[id]",
@@ -28,9 +27,9 @@ export default function NewsCard({ newsItem, showFullData = false }: { newsItem:
 
 
     return (<Pressable onPress={() => openNews(newsItem)}>
-        <View style={{ marginBottom: 8, flexDirection: 'column', gap: 4 }} >
+        <View style={styles.card} >
             <View>
-                <Image source={{ uri: newsItem.image_url }} style={{ width: '100%', height: 200 }} />
+                <Image source={{ uri: newsItem.image_url }} style={styles.cardImage} />
                 <ThemedText key={newsItem.id} type="subtitle" style={styles.newsSource}>
                     {newsItem.news_site}
                 </ThemedText>
@@ -48,7 +47,7 @@ export default function NewsCard({ newsItem, showFullData = false }: { newsItem:
             {showFullData && <View>
                 {newsItem.authors.map((author) => (<View  >
                     <ThemedText type="default" key={author.name}>Author: {author.name}</ThemedText>
-                    {author.socials && <View style={{ flexDirection: "row", gap: 8 }}>
+                    {author.socials && <View style={styles.authorsContainer}>
                         {Object.entries(author.socials).filter(social => social[1]).map((social) =>
                             <ExternalLink href={social[1]!} text={social[0]} />
                         )}</View>}
@@ -65,8 +64,11 @@ export default function NewsCard({ newsItem, showFullData = false }: { newsItem:
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 16 },
+    card: { marginBottom: 8, flexDirection: 'column', gap: 4 },
+    cardImage: { width: '100%', height: 200 },
     newsSource: { position: 'absolute', bottom: 0, right: 0, textAlign: 'center', backgroundColor: '#ffffffce', paddingVertical: 8, paddingHorizontal: 16, borderTopLeftRadius: 16 },
     cardButtons: {
         position: 'absolute', top: 0, right: 0, textAlign: 'center', backgroundColor: '#ffffffce', borderBottomLeftRadius: 16
     },
+    authorsContainer: { flexDirection: "row", gap: 8 }
 });

@@ -36,12 +36,10 @@ export const SavedNewsProvider = ({ children }: any) => {
             return;
         }
         await NewsStorage.save(item);
-
         refresh();
     };
 
     const isSaved = async (id: number) => {
-
         return saved.some((n) => n.id === id);
     };
 
